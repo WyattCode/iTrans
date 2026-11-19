@@ -1,0 +1,73 @@
+name: XTrans
+options:
+  developmentLanguage: zh-Hans
+  bundleIdPrefix: app.xtrans
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "20261119.1"
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+targets:
+  XTrans:
+    type: application
+    platform: iOS
+    sources: [XTrans]
+    # 启动画面用和 App 一样的深色底（LaunchBackground）。`INFOPLIST_KEY_UILaunchScreen_BackgroundColor` 并不会写进 Info.plist
+    # （UILaunchScreen 字典是空的，启动画面就成了纯黑，App 内容再从黑色里淡入），所以这里显式写进去。
+    info:
+      path: Config/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.itrans
+        # iPhone（含 iPhone Duo）+ iPad：布局按屏幕尺寸自适应（不看机型、不看方向），宽屏用双栏。
+        # 不能再声明 UIRequiresFullScreen：iPhone Duo 的内屏（展开后 951×669pt，默认就是横向）会因此把 App 缩成
+        # 居中的一小块（兼容模式），两边留黑；iOS 27 起这个键也不再能阻止 App 被调整大小（TN3192）。
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        INFOPLIST_KEY_CFBundleDisplayName: iTrans
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: iTrans 需要使用麦克风，听你和对方说话并实时翻译。
+        INFOPLIST_KEY_NSCameraUsageDescription: iTrans 需要使用相机，拍下菜单、路牌等图片并识别其中的文字来翻译。
+        INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: iTrans 使用语音识别把说话内容转成文字再翻译，优先在设备上完成。
+  XTransTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [XTransTests]
+    dependencies:
+      - target: XTrans
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.itrans.tests
+
+schemes:
+  XTrans:
+    build:
+      targets:
+        XTrans: all
+        XTransTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - XTransTests
+      # 测试里有不少对中文文案的断言，固定成中文环境，不受模拟器当前语言影响
+      commandLineArguments:
+        "-AppleLanguages (zh-Hans)": true
+        "-AppleLocale zh_CN": true

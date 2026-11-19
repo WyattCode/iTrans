@@ -1,0 +1,12 @@
+# 构建产物
+app/build*/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+
+# 证书和密钥
+*.xcconfig
+*.p8
+*.p12
+*.mobileprovision
+*.ips

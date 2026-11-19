@@ -1,0 +1,54 @@
+{
+  "sourceLanguage": "zh-Hans",
+  "strings": {
+    "NSMicrophoneUsageDescription": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans 需要使用麦克风，听你和对方说话并实时翻译。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans uses the microphone to hear you and your conversation partner so it can translate in real time."
+          }
+        }
+      }
+    },
+    "NSSpeechRecognitionUsageDescription": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans 使用语音识别把说话内容转成文字再翻译，优先在设备上完成。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans uses speech recognition to turn what is said into text before translating it, on your device whenever possible."
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans 需要使用相机，拍下菜单、路牌等图片并识别其中的文字来翻译。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iTrans uses the camera to photograph menus, signs and similar text so it can read and translate them."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
