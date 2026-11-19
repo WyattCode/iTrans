@@ -125,6 +125,8 @@ private struct LanguagePickerPresenter: ViewModifier {
             LanguagePickerSheet(session: session, packs: packs)
                 .preferredColorScheme(scheme)
                 .presentationSizing(.form)
+                // 直板上和「加入对话」弹层一样高（58% 屏高），可以上拉到整屏；宽屏是居中的表单卡片，不受影响
+                .sheetDetents([.fraction(0.58), .large])
         }
     }
 }

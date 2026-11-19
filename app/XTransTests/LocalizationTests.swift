@@ -106,7 +106,7 @@ final class LocalizationTests: XCTestCase {
         "你好！欢迎来到东京。", "下一站是涩谷。请注意站台间隙。", "左侧车门将会打开。", "请问最近的地铁站怎么走", "一直往前走，然后在红绿灯左转。", "一次 180 日元。", "我在车站东口等你",
         "打扰一下，我想办理入住。我用陈这个名字订了三晚的房间。请问早餐几点开始？另外，可以延迟退房吗？我的航班在晚上六点起飞。非常感谢。",   // 长译文演示（-XTransDemo long）
         "谢谢！", "中文", "日本語", "M1 待机", "M3 译文已出",
-        "轻点麦克风，开始说话", "译文会显示在这里", "自动识别你和对方的语言，也可以按住说话。", "正在聆听 · ", "朗读中…", "对方正在说话…",
+        "轻点麦克风，开始说话", "译文会显示在这里", "自动识别你和对方的语言，也可以按住说话。", "正在聆听 · ", "正在聆听", "朗读中…", "对方正在说话…",
         "再说一次", "用键盘", "预览 · 未发送", "按住说话",
         "酱油拉面 900 日元", "拉面店菜单",       // 历史页演示数据
         "你好，很高兴认识你。",
@@ -163,6 +163,8 @@ final class LocalizationTests: XCTestCase {
             for lit in literals(in: line) {
                 let ns = lit as NSString
                 guard cjk.firstMatch(in: lit, range: NSRange(location: 0, length: ns.length)) != nil else { continue }
+                // 带假名的是日语（半屏提示语按对方语言写，见 `Strings`），不是写死的中文界面文案
+                if lit.unicodeScalars.contains(where: { (0x3040...0x30ff).contains($0.value) }) { continue }
                 let key = Self.normalizedKey(lit)
                 if catalogKeys.contains(key) || allowed.contains(key) { continue }
                 found.append("\(fileName):\(index + 1)  “\(lit)”")

@@ -415,3 +415,26 @@ final class AudioSessionSerializationTests: XCTestCase {
         XCTAssertGreaterThan(fresh, stamp)
     }
 }
+
+/// 半屏上的提示语：这半屏是哪种语言，就用哪种语言写（原来只有中文和英文，日语 / 韩语等一律显示英文）
+final class HalfScreenStringsTests: XCTestCase {
+    func testEveryLanguageHasItsOwnHalfScreenStrings() {
+        let english = LanguageOption.en
+        for lang in LanguageOption.all where lang != english && !lang.isChinese {
+            XCTAssertNotEqual(Strings.previewEmpty(lang), Strings.previewEmpty(english), lang.id)
+            XCTAssertNotEqual(Strings.emptyTitle(lang), Strings.emptyTitle(english), lang.id)
+            XCTAssertNotEqual(Strings.emptyHint(lang), Strings.emptyHint(english), lang.id)
+            XCTAssertNotEqual(Strings.partnerSpeaking(lang), Strings.partnerSpeaking(english), lang.id)
+            XCTAssertNotEqual(Strings.noSpeech(lang), Strings.noSpeech(english), lang.id)
+            XCTAssertNotEqual(Strings.holdToTalk(lang), Strings.holdToTalk(english), lang.id)
+            XCTAssertFalse(Strings.listening(lang).isEmpty)
+        }
+    }
+
+    func testChineseAndEnglishStringsAreUnchanged() {
+        XCTAssertEqual(Strings.previewEmpty(.zhHans), "译文会显示在这里")
+        XCTAssertEqual(Strings.previewEmpty(.en), "The translation will appear here")
+        XCTAssertEqual(Strings.listening(.zhHans), "正在聆听 · 中文")
+        XCTAssertEqual(Strings.listening(.en), "Listening · English")
+    }
+}
