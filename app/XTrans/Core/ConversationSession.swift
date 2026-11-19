@@ -177,7 +177,7 @@ final class ConversationSession {
             guard let self, speakingTurnID != nil else { return }
             progressSeen = true
             lastProgressAt = .now
-            spokenOffset = max(spokenOffset, end)
+            if end > spokenOffset { spokenOffset = end }          // 没前进就不写（写同一个值也会通知界面）
         }
     }
 
@@ -717,7 +717,8 @@ final class ConversationSession {
                 switch event {
                 case .partial(let text):
                     if !text.isEmpty { addIfNeeded() }
-                    update(turn.id) { $0.sourceText = text }
+                    // 识别器常常连着报同一段文字：没变就不写，不然读它的每一行都白白重算一遍
+                    if turns.last(where: { $0.id == turn.id })?.sourceText != text { update(turn.id) { $0.sourceText = text } }
                 case .level(let level): pushLevel(level)
                 case .final(let text): finalText = text
                 }
@@ -833,8 +834,11 @@ final class ConversationSession {
     }
 
     private func pushLevel(_ level: Float) {
-        levels.removeFirst()
-        levels.append(level)
+        // 一次赋值：原来先删头再加尾是两次改动，读它的视图每个音频缓冲被通知两次，数组也多拷一份
+        var next = levels
+        next.removeFirst()
+        next.append(level)
+        levels = next
     }
 }
 

@@ -67,8 +67,11 @@ struct RootView: View {
     /// 开屏后依次把设置 / 历史 / 加入面板 / 语言列表 / 对话流各建一份（不可见、1×1，每份约一秒）：第一次点开时 SwiftUI 要现场建视图图、
     /// 查 Swift 协议一致性（`swift_conformsToProtocol` 首次查找是线性扫描，模拟器 Release 抽样占首开主线程时间的 35–45%），
     /// 比之后慢好几倍（设置首开约 400–690ms，第二次约 100ms）。提前建一遍，第一次点开也是「第二次」的速度。
-    @State private var prewarmStage: PrewarmStage?
+    /// 放在一个 `@Observable` 盒子里、只由 `PrewarmHost` 读：原来是 RootView 自己的 `@State`，每换一步（开屏后十来秒里 12 次）
+    /// 整个 RootView 连同首页 / 对话流的每一行都要重新求值一遍。
+    @State private var prewarm = PrewarmState()
     enum PrewarmStage: CaseIterable { case settings, history, add, languages, stream, dock }
+    @Observable final class PrewarmState { var stage: PrewarmStage? }
     /// 设置 / 历史（推入模式）开屏后建一份常驻（藏在屏幕右边外面）：打开只是把已经建好的页面滑进来，关掉也不再拆 List。
     /// 现场建 / 拆一个 List（UICollectionView + 二三十个自适应高度的行）每次要 130–280ms 主线程（模拟器 Release 抽样），
     /// 正好落在推入 / 返回动画里，动画就卡。
@@ -240,7 +243,7 @@ struct RootView: View {
         // 设置同步、触觉、音频会话释放、常亮等「观察会话 / 设置」的副作用都放进 RootObservers：
         // 写在根视图里，每个识别中间结果、每次设置改动都会让整个根视图（含两个标签页）重新求值
         .background { RootObservers(model: model, bigDisplayActive: bigDisplay != nil) }
-        .overlay(alignment: .topLeading) { prewarmViews }
+        .overlay(alignment: .topLeading) { PrewarmHost(state: prewarm) { prewarmViews(for: $0) } }
         .onAppear {
             LaunchClock.mark("root.appear")
             if LaunchClock.enabled {
@@ -287,9 +290,9 @@ struct RootView: View {
             // 设置最先：它的首次打开最重（外屏上约 690ms）
             for stage in PrewarmStage.allCases {
                 await whenIdle()
-                prewarmStage = stage
+                prewarm.stage = stage
                 try? await Task.sleep(for: .milliseconds(stage == .stream ? 1200 : 1000))
-                prewarmStage = nil
+                prewarm.stage = nil
                 try? await Task.sleep(for: .milliseconds(500))
             }
             // 键盘（系统首次弹出很重）：空闲时无声地走一遍
@@ -462,8 +465,8 @@ struct RootView: View {
 
     /// 见 `prewarmStage`：不可见、不可点、不进无障碍树。
     @ViewBuilder
-    private var prewarmViews: some View {
-        if let stage = prewarmStage {
+    private func prewarmViews(for stage: PrewarmStage?) -> some View {
+        if let stage {
             ZStack {
                 switch stage {
                 case .settings: settingsView(onClose: nil, usesBack: false, asSheet: true)
@@ -688,3 +691,10 @@ struct RootView: View {
 }
 
 
+
+/// 只有它读「现在预热到哪一步」：换一步只重建这一小块，不牵动 RootView。
+private struct PrewarmHost<Content: View>: View {
+    let state: RootView.PrewarmState
+    @ViewBuilder let content: (RootView.PrewarmStage?) -> Content
+    var body: some View { content(state.stage) }
+}

@@ -56,6 +56,8 @@ struct HistoryView: View {
         var filtered: [ConversationRecord]?
         var groups: [(day: Date, items: [ConversationRecord])]?
         var count = -1
+        /// 每场对话的「几条 / 有没有图片」：算它要把这场对话的全部轮次从数据库里读出来。按「最后更新时间」记住，对话没变就不再读
+        var stats: [UUID: (stamp: Date, count: Int, hasImages: Bool)] = [:]
     }
     @State private var memo = Memo()
     /// 缓存还能不能用：对话条数没变、而且里面没有已经被删掉的记录（读已删除的 SwiftData 对象的属性会崩）
@@ -606,7 +608,17 @@ struct HistoryView: View {
         }
     }
 
+    private func stats(_ record: ConversationRecord) -> (count: Int, hasImages: Bool) {
+        if let hit = memo.stats[record.id], hit.stamp == record.updatedAt { return (hit.count, hit.hasImages) }
+        let turns = record.turns
+        let value = (count: turns.count, hasImages: turns.contains { $0.kindRaw == TurnKind.photo.rawValue })
+        if memo.stats.count > 400 { memo.stats.removeAll() }
+        memo.stats[record.id] = (record.updatedAt, value.count, value.hasImages)
+        return value
+    }
+
     private func row(_ record: ConversationRecord) -> some View {
+        let stats = stats(record)
         let me = LanguageOption.all.first { $0.id == record.meID } ?? .zhHans
         let them = LanguageOption.all.first { $0.id == record.themID } ?? .en
         let chip = Text("\(me.shortName) ⇄ \(them.shortName)")
@@ -617,7 +629,7 @@ struct HistoryView: View {
             .background(Theme.meFill.opacity(0.14), in: Capsule())
             .fixedSize()
         let badges = Group {
-            if record.hasImages {
+            if stats.hasImages {
                 Image(systemName: "camera").font(.system(size: 12)).foregroundStyle(Theme.mut)
                     .accessibilityLabel("含图片")
             }
@@ -635,7 +647,7 @@ struct HistoryView: View {
                     badges
                 }
             }
-            Text("\(record.updatedAt.formatted(date: .omitted, time: .shortened)) · \(record.turns.count) 条")
+            Text("\(record.updatedAt.formatted(date: .omitted, time: .shortened)) · \(stats.count) 条")
                 .font(Theme.caption)
                 .foregroundStyle(Theme.mut)
         }
