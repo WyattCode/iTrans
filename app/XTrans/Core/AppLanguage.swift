@@ -32,34 +32,54 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 final class AppLanguageState {
     static let shared = AppLanguageState()
 
-    var selection: AppLanguage = .system
+    /// 设置里选的那一项。改它会重新算一遍下面三样。
+    var selection: AppLanguage = .system { didSet { refresh() } }
 
     /// 实际用的语言代码（工程里有的那几种之一）
-    var code: String {
-        if selection != .system { return selection.rawValue }
-        return Self.systemCode
+    private(set) var code: String
+    /// 日期、数字、语言名字按它来写
+    private(set) var locale: Locale
+    /// `String(localized:)` 从它里面取文案
+    @ObservationIgnored private(set) var bundle: Bundle
+
+    private init() {
+        (code, locale, bundle) = Self.resolve(.system)
     }
 
-    var locale: Locale { selection == .system ? Locale.current : Locale(identifier: code) }
-
-    var bundle: Bundle {
-        let code = code
-        lock.lock(); defer { lock.unlock() }
-        if let cached = bundles[code] { return cached }
-        let found = Bundle.main.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)) ?? .main
-        bundles[code] = found
-        return found
+    /// 系统的语言偏好变了（或者刚改完 `AppleLanguages`）之后调用：「跟随系统」要重新看一眼系统给的是哪种
+    func refresh() {
+        let (code, locale, bundle) = Self.resolve(selection)
+        self.bundle = bundle
+        if code != self.code { self.code = code }
+        if locale != self.locale { self.locale = locale }
     }
 
-    /// 系统给 App 选的语言：在工程支持的语言里，按系统的偏好顺序挑第一种
-    private static var systemCode: String {
-        let available = Bundle.main.localizations.filter { $0 != "Base" }
-        let wanted = UserDefaults.standard.stringArray(forKey: "AppleLanguages") ?? Locale.preferredLanguages
-        return Bundle.preferredLocalizations(from: available, forPreferences: wanted).first ?? "zh-Hans"
+    /// 在工程支持的语言里，按偏好顺序挑第一种能对上的（`zh-HK` 对繁体，`fr` 这种没有的跳过看下一个）
+    static func pick(from available: [String], preferences: [String]) -> String {
+        Bundle.preferredLocalizations(from: available, forPreferences: preferences).first ?? "zh-Hans"
     }
 
-    @ObservationIgnored private var bundles: [String: Bundle] = [:]
-    @ObservationIgnored private let lock = NSLock()
+    private static func resolve(_ selection: AppLanguage) -> (String, Locale, Bundle) {
+        let code: String
+        let locale: Locale
+        if selection != .system {
+            code = selection.rawValue
+            locale = Locale(identifier: code)
+        } else {
+            // 系统给 App 选的语言：在工程支持的语言里，按系统的偏好顺序挑第一种
+            let available = Bundle.main.localizations.filter { $0 != "Base" }
+            let wanted = UserDefaults.standard.stringArray(forKey: "AppleLanguages") ?? Locale.preferredLanguages
+            code = pick(from: available, preferences: wanted)
+            // 正常情况下就是系统当前的地区设置（带着 24 小时制等个人偏好）。
+            // 只有刚从手动选的语言切回「跟随系统」、系统的那份还没跟上时，才自己拼一个
+            let current = Locale.current
+            let currentCode = Bundle.preferredLocalizations(from: available, forPreferences: [current.identifier(.bcp47)]).first
+            if currentCode == code { locale = current }
+            else { locale = Locale(identifier: wanted.first { Bundle.preferredLocalizations(from: available, forPreferences: [$0]).first == code } ?? code) }
+        }
+        let bundle = Bundle.main.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)) ?? .main
+        return (code, locale, bundle)
+    }
 }
 
 extension String {
@@ -67,5 +87,12 @@ extension String {
     init(localized key: String.LocalizationValue) {
         let state = AppLanguageState.shared
         self.init(localized: key, table: nil, bundle: state.bundle, locale: state.locale, comment: nil)
+    }
+}
+
+extension Date {
+    /// 按界面语言写日期和时间（系统自带的 `formatted(date:time:)` 只认系统语言：界面切成韩文，日期还是「2026年11月20日」）
+    func appFormatted(date: Date.FormatStyle.DateStyle, time: Date.FormatStyle.TimeStyle) -> String {
+        formatted(Date.FormatStyle(date: date, time: time, locale: AppLanguageState.shared.locale))
     }
 }

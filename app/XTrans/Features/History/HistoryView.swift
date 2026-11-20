@@ -369,7 +369,7 @@ struct HistoryView: View {
                 .font(.system(.headline))
                 .foregroundStyle(Theme.fg)
                 .lineLimit(1)
-            Text("\(record.updatedAt.formatted(date: .abbreviated, time: .shortened)) · \(record.turns.count) 条")
+            Text("\(record.updatedAt.appFormatted(date: .abbreviated, time: .shortened)) · \(record.turns.count) 条")
                 .font(Theme.caption)
                 .foregroundStyle(Theme.mut)
                 .lineLimit(1)
@@ -647,7 +647,7 @@ struct HistoryView: View {
                     badges
                 }
             }
-            Text("\(record.updatedAt.formatted(date: .omitted, time: .shortened)) · \(stats.count) 条")
+            Text("\(record.updatedAt.appFormatted(date: .omitted, time: .shortened)) · \(stats.count) 条")
                 .font(Theme.caption)
                 .foregroundStyle(Theme.mut)
         }
@@ -672,7 +672,7 @@ struct HistoryView: View {
         let calendar = Calendar.current
         if calendar.isDateInToday(day) { return String(localized: "今天") }
         if calendar.isDateInYesterday(day) { return String(localized: "昨天") }
-        return day.formatted(date: .abbreviated, time: .omitted)
+        return day.appFormatted(date: .abbreviated, time: .omitted)
     }
 }
 

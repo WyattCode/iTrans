@@ -85,6 +85,35 @@ final class LocalizationTests: XCTestCase {
         XCTAssertEqual(Set(AppLanguage.allCases.map(\.title)).count, AppLanguage.allCases.count, "每种语言的名字不能重复")
     }
 
+    /// 「跟随系统」按系统的语言偏好挑；工程里没有的语言落到下一个偏好
+    func testFollowSystemPicksFromTheSystemLanguagePreferences() {
+        let available = Bundle.main.localizations.filter { $0 != "Base" }
+        XCTAssertEqual(Set(available), ["zh-Hans", "zh-Hant", "en", "ja", "ko"])
+        for (preferences, expected) in [(["ko-KR"], "ko"), (["zh-Hant-TW", "en"], "zh-Hant"), (["zh-HK"], "zh-Hant"), (["zh-Hans-CN"], "zh-Hans"),
+                                        (["fr-FR", "ja-JP"], "ja"), (["en-GB"], "en")] {
+            XCTAssertEqual(AppLanguageState.pick(from: available, preferences: preferences), expected, "\(preferences)")
+        }
+        let state = AppLanguageState.shared
+        let before = state.selection
+        defer { state.selection = before }
+        state.selection = .system
+        XCTAssertTrue(available.contains(state.code))
+        XCTAssertEqual(AppLanguageState.pick(from: available, preferences: [state.locale.identifier(.bcp47)]), state.code, "地区设置和挑出来的语言要对得上")
+    }
+
+    func testDatesAreWrittenInTheSelectedAppLanguage() {
+        let state = AppLanguageState.shared
+        let before = state.selection
+        defer { state.selection = before }
+        let date = Date(timeIntervalSince1970: 1_795_000_000)
+        state.selection = .ko
+        XCTAssertTrue(date.appFormatted(date: .abbreviated, time: .omitted).contains("년"))
+        state.selection = .en
+        XCTAssertFalse(date.appFormatted(date: .abbreviated, time: .omitted).contains("年"))
+        state.selection = .ja
+        XCTAssertTrue(date.appFormatted(date: .abbreviated, time: .omitted).contains("年"))
+    }
+
     func testAppLanguageSettingIsPersistedAndSurvivesReset() {
         let before = AppLanguageState.shared.selection
         defer { AppLanguageState.shared.selection = before }

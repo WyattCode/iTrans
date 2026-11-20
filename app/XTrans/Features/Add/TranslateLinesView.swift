@@ -125,6 +125,7 @@ struct TranslateLinesView: View {
                 Label("朗读", systemImage: "speaker.wave.2")
                     .font(.system(.subheadline).weight(.semibold))
                     .foregroundStyle(Theme.fg)
+                    .lineLimit(1).minimumScaleFactor(0.75)      // 窄屏（Duo 外屏）和较长的语言：缩一点字，不折成两行
                     .frame(maxWidth: .infinity, minHeight: 48)
                     .glass(in: Capsule())
             }
@@ -141,6 +142,7 @@ struct TranslateLinesView: View {
                 Label("发送到对话", systemImage: "arrow.up")
                     .font(.system(.subheadline).weight(.semibold))
                     .foregroundStyle(Theme.fg)
+                    .lineLimit(1).minimumScaleFactor(0.75)      // 窄屏（Duo 外屏）和较长的语言：缩一点字，不折成两行
                     .frame(maxWidth: .infinity, minHeight: 48)
                     .glass(in: Capsule(), tint: Theme.meFill, interactive: true)
             }

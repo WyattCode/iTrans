@@ -33,10 +33,12 @@ final class AppSettings: ObservableObject {
     @Published var appLanguage: AppLanguage {
         didSet {
             defaults.set(appLanguage.rawValue, forKey: Key.appLanguage)
+            // 先改系统那份偏好、再换界面：切回「跟随系统」时要按改完之后的偏好来挑语言
+            if defaults === UserDefaults.standard {      // 调试用的临时设置不动真实的系统偏好
+                if appLanguage == .system { defaults.removeObject(forKey: "AppleLanguages") }
+                else { defaults.set([appLanguage.rawValue], forKey: "AppleLanguages") }
+            }
             AppLanguageState.shared.selection = appLanguage
-            guard defaults === UserDefaults.standard else { return }      // 调试用的临时设置不动真实的系统偏好
-            if appLanguage == .system { defaults.removeObject(forKey: "AppleLanguages") }
-            else { defaults.set([appLanguage.rawValue], forKey: "AppleLanguages") }
         }
     }
     /// 语音对话里，翻译完成后自动朗读译文

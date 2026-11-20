@@ -46,7 +46,7 @@ app/                 App 工程
     Core/            识别、翻译、朗读、历史等核心逻辑
     Features/        各个界面（面对面、对话流、历史、设置等）
     Theme/           颜色、字体、玻璃材质等设计规范
-  XTransTests/       单元测试（238 个）
+  XTransTests/       单元测试（240 个）
   Config/            构建配置
   project.yml        工程定义（用 XcodeGen 生成 Xcode 工程）
 design-options/      早期设计方案对比

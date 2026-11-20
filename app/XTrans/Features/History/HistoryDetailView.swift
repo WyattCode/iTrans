@@ -64,7 +64,7 @@ struct HistoryDetailView: View {
                     .background(Theme.meFill.opacity(0.14), in: Capsule())
                     .fixedSize()
             }
-            Text("\(record.updatedAt.formatted(date: .abbreviated, time: .shortened)) · \(record.turns.count) 条")
+            Text("\(record.updatedAt.appFormatted(date: .abbreviated, time: .shortened)) · \(record.turns.count) 条")
                 .font(Theme.caption)
                 .foregroundStyle(Theme.mut)
         }
@@ -127,7 +127,7 @@ private struct DetailBubble: View {
 
     private var meta: String {
         let who = isMe ? String(localized: "我") : String(localized: "对方")
-        let time = turn.createdAt.formatted(date: .omitted, time: .shortened)
+        let time = turn.createdAt.appFormatted(date: .omitted, time: .shortened)
         guard let kind = turn.kind.label else { return "\(who) · \(time)" }
         return "\(who) · \(time) · \(kind)"
     }

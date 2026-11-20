@@ -313,7 +313,7 @@ struct StreamView: View {
     }
 
     private var subtitle: Text {
-        let day = session.conversationCreatedAt.formatted(date: .abbreviated, time: .shortened)
+        let day = session.conversationCreatedAt.appFormatted(date: .abbreviated, time: .shortened)
         return Text("\(day) · \(session.me.nativeName) ⇄ \(session.them.nativeName) · \(session.turns.count) 条")
     }
 
@@ -598,7 +598,7 @@ private struct MessageRow: View {
     /// "我 · 14:06 · 图片文字"
     private var metaLine: String {
         let who = isMe ? String(localized: "我") : String(localized: "对方")
-        let time = turn.createdAt.formatted(date: .omitted, time: .shortened)
+        let time = turn.createdAt.appFormatted(date: .omitted, time: .shortened)
         let base = "\(who) · \(time)"
         guard let kind = turn.kind.label else { return base }
         return "\(base) · \(kind)"
