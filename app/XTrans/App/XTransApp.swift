@@ -10,6 +10,8 @@ struct XTransApp: App {
             RootView(model: model)
                 .translationHost(model.appleEngine)
                 .environment(\.appleTranslationEngine, model.appleEngine)
+                // 界面语言：`Text("…")` 跟着它取对应语言的文案。放在最外层，弹层、引导页、整屏盖上的页面才都带得到
+                .environment(\.locale, AppLanguageState.shared.locale)
         }
         .modelContainer(model.container)
     }

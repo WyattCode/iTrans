@@ -1,54 +1,108 @@
 {
-  "sourceLanguage": "zh-Hans",
-  "strings": {
-    "NSMicrophoneUsageDescription": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans 需要使用麦克风，听你和对方说话并实时翻译。"
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "NSCameraUsageDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 需要使用相机，拍下菜单、路牌等图片并识别其中的文字来翻译。"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans uses the microphone to hear you and your conversation partner so it can translate in real time."
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans uses the camera to photograph menus, signs and similar text so it can read and translate them."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 需要使用相機，拍下菜單、路牌等圖片並辨識其中的文字來翻譯。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTransは、メニューや標識などを撮影し、中のテキストを認識して翻訳するためにカメラを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans가 메뉴판, 표지판 등을 촬영하고 그 안의 텍스트를 인식하여 번역하려면 카메라를 사용해야 합니다."
           }
         }
       }
     },
-    "NSSpeechRecognitionUsageDescription": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans 使用语音识别把说话内容转成文字再翻译，优先在设备上完成。"
+    "NSMicrophoneUsageDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 需要使用麦克风，听你和对方说话并实时翻译。"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans uses speech recognition to turn what is said into text before translating it, on your device whenever possible."
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans uses the microphone to hear you and your conversation partner so it can translate in real time."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 需要使用麥克風，聽你和對方說話並即時翻譯。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTransは、あなたと相手の話を聞き取ってリアルタイムで翻訳するためにマイクを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans가 나와 상대방의 말을 듣고 실시간으로 번역하려면 마이크를 사용해야 합니다."
           }
         }
       }
     },
-    "NSCameraUsageDescription": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans 需要使用相机，拍下菜单、路牌等图片并识别其中的文字来翻译。"
+    "NSSpeechRecognitionUsageDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 使用语音识别把说话内容转成文字再翻译，优先在设备上完成。"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iTrans uses the camera to photograph menus, signs and similar text so it can read and translate them."
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans uses speech recognition to turn what is said into text before translating it, on your device whenever possible."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans 使用語音辨識把說話內容轉成文字再翻譯，優先在裝置上完成。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTransは、話した内容を文字に変換して翻訳するために音声認識を使用します。認識は可能な限りデバイス上で行われます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iTrans는 음성 인식을 사용하여 말한 내용을 텍스트로 바꾼 후 번역하며, 가능한 한 기기에서 처리합니다."
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

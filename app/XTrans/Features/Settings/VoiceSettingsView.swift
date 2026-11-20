@@ -191,7 +191,7 @@ struct VoicePickerView: View {
 
     /// 例："英语（英国） · 增强 · 女声"
     private func detail(of voice: VoiceChoice) -> String {
-        var parts = [Locale.current.localizedString(forIdentifier: voice.language) ?? voice.language]
+        var parts = [AppLanguageState.shared.locale.localizedString(forIdentifier: voice.language) ?? voice.language]
         switch voice.quality {
         case .standard: parts.append(String(localized: "标准音质"))
         case .enhanced: parts.append(String(localized: "增强"))

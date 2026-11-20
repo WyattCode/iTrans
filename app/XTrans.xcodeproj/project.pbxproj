@@ -61,6 +61,7 @@
 		94E55F7C5B7AB9D394E2A5ED /* Phase6Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B8A892D69B9F596172B60A /* Phase6Tests.swift */; };
 		95974C6C4C2C274F200C7ED8 /* TranslateLinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADAA0A8E89BC50C643F7E55 /* TranslateLinesView.swift */; };
 		95C61B5DAB4CD4B49F8C916F /* Phrase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F4C5DFD2535B7A872299B /* Phrase.swift */; };
+		9F3FA1876C58855B4BDF2270 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2275566737E3D9A9266637 /* AppLanguage.swift */; };
 		A317176DD473E7EBC0C6A529 /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AF681A1BC6F97313AD8C4B /* LocalizationTests.swift */; };
 		A360C7854CB09FF1629806FC /* AuroraBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CDD50FDD3F7D7732C33F3B /* AuroraBackground.swift */; };
 		B01CAFC8B449E60D0B34BA56 /* BigDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE7F5CA576C57CB52AD0F02 /* BigDisplayView.swift */; };
@@ -125,6 +126,7 @@
 		5538EC869696D376C8C8548C /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		59029312746D72DE4BD50CF4 /* Round2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round2Tests.swift; sourceTree = "<group>"; };
 		5C2F187BA77672110BA05247 /* FaceGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceGeometry.swift; sourceTree = "<group>"; };
+		5D2275566737E3D9A9266637 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		5D354D43DBDDE783696C151B /* XTransTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = XTransTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6508DB94DA5BA899253AB091 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		67AF681A1BC6F97313AD8C4B /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				04BA83F111D0E277B750AACC /* AppAudioSession.swift */,
+				5D2275566737E3D9A9266637 /* AppLanguage.swift */,
 				1537E985F39EC639681675C2 /* AppleTranslationEngine.swift */,
 				96545E6261223280215123CC /* AppSettings.swift */,
 				CE7F88653EA44A0225A99A9B /* BodyCount.swift */,
@@ -437,7 +440,10 @@
 			knownRegions = (
 				Base,
 				en,
+				ja,
+				ko,
 				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 8B224DEB14F4557B3A372DC4;
 			minimizedProjectReferenceProxies = 1;
@@ -474,6 +480,7 @@
 				EEBB435D6476E3D40DD45ABE /* AdaptiveLayout.swift in Sources */,
 				01981A143A1909F2E59BA71B /* AddPanelView.swift in Sources */,
 				CA6784F22CDD11D2351061A2 /* AppAudioSession.swift in Sources */,
+				9F3FA1876C58855B4BDF2270 /* AppLanguage.swift in Sources */,
 				6FC4D975E111591E17CE1B82 /* AppSettings.swift in Sources */,
 				C3B69F127AF5BBB75AAF21C3 /* AppleTranslationEngine.swift in Sources */,
 				A360C7854CB09FF1629806FC /* AuroraBackground.swift in Sources */,

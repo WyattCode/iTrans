@@ -29,6 +29,16 @@ final class AppSettings: ObservableObject {
     private let defaults: UserDefaults
 
     @Published var appearance: Appearance { didSet { defaults.set(appearance.rawValue, forKey: Key.appearance) } }
+    /// 界面语言。「跟随系统」时不写任何东西，手动选的那种同时写进 `AppleLanguages`，系统自己画的界面下次打开也跟着变
+    @Published var appLanguage: AppLanguage {
+        didSet {
+            defaults.set(appLanguage.rawValue, forKey: Key.appLanguage)
+            AppLanguageState.shared.selection = appLanguage
+            guard defaults === UserDefaults.standard else { return }      // 调试用的临时设置不动真实的系统偏好
+            if appLanguage == .system { defaults.removeObject(forKey: "AppleLanguages") }
+            else { defaults.set([appLanguage.rawValue], forKey: "AppleLanguages") }
+        }
+    }
     /// 语音对话里，翻译完成后自动朗读译文
     @Published var autoSpeak: Bool { didSet { defaults.set(autoSpeak, forKey: Key.autoSpeak) } }
     @Published var speechRate: Float { didSet { defaults.set(speechRate, forKey: Key.speechRate) } }
@@ -49,6 +59,9 @@ final class AppSettings: ObservableObject {
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         appearance = Appearance(rawValue: defaults.string(forKey: Key.appearance) ?? "") ?? .system
+        let language = AppLanguage(rawValue: defaults.string(forKey: Key.appLanguage) ?? "") ?? .system
+        appLanguage = language
+        AppLanguageState.shared.selection = language
         autoSpeak = defaults.object(forKey: Key.autoSpeak) as? Bool ?? true
         let rate = defaults.object(forKey: Key.speechRate) as? Float ?? Self.defaultSpeechRate
         speechRate = min(max(rate, Self.speechRateRange.lowerBound), Self.speechRateRange.upperBound)
@@ -92,6 +105,7 @@ final class AppSettings: ObservableObject {
 
     private enum Key {
         static let appearance = "settings.appearance"
+        static let appLanguage = "settings.appLanguage"
         static let autoSpeak = "settings.autoSpeak"
         static let speechRate = "settings.speechRate"
         static let tent = "settings.tentMode"

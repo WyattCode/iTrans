@@ -477,6 +477,15 @@ struct SettingsView: View {
             // 深色 / 浅色切换：整页溶解，不是硬切
             AppearanceSegmented(selection: Binding(get: { settings.appearance },
                                                     set: { new in crossfadePage(reduceMotion: reduceMotion, extraSettle: 0.08, punchesChrome: false) { settings.appearance = new } }))
+            // 界面语言：选完整页溶解着换过去，不用重启
+            Picker("界面语言", selection: Binding(get: { settings.appLanguage },
+                                                 set: { new in
+                guard new != settings.appLanguage else { return }
+                crossfadePage(reduceMotion: reduceMotion, extraSettle: 0.08, punchesChrome: false) { settings.appLanguage = new }
+            })) {
+                ForEach(AppLanguage.allCases) { Text(verbatim: $0.title).tag($0) }
+            }
+            .tint(Theme.mut)
             // 只在宽屏（Duo 内屏 / iPad）起作用：直板和 Duo 外屏上显示出来却没有任何效果
             if LayoutClass.forWindow(fallback: .zero) == .wide && !DuoLayout.isDuoInner(DuoLayout.currentWindowSize) {
                 Picker("双屏摆放", selection: $settings.tentMode) {

@@ -37,7 +37,7 @@ struct LanguagePickerSheet: View {
         return LanguageOption.all.filter { lang in
             lang != selection && (q.isEmpty || lang.nativeName.localizedCaseInsensitiveContains(q) || lang.id.localizedCaseInsensitiveContains(q)
                                   // 也认界面语言 / 英文里的叫法：搜「日语」「韩语」「Japanese」都要能找到（列表里显示的是原文名）
-                                  || (Locale.current.localizedString(forIdentifier: lang.id) ?? "").localizedCaseInsensitiveContains(q)
+                                  || (AppLanguageState.shared.locale.localizedString(forIdentifier: lang.id) ?? "").localizedCaseInsensitiveContains(q)
                                   || (Locale(identifier: "en").localizedString(forIdentifier: lang.id) ?? "").localizedCaseInsensitiveContains(q)
                                   || (Locale(identifier: "zh-Hans").localizedString(forIdentifier: lang.id) ?? "").localizedCaseInsensitiveContains(q))
         }

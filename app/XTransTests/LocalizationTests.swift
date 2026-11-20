@@ -48,6 +48,59 @@ final class LocalizationTests: XCTestCase {
         }
     }
 
+    /// 界面语言里除了英文之外的三种：每条都要有、不能空、占位符个数和原文一致
+    func testEveryKeyIsTranslatedIntoTraditionalChineseJapaneseAndKorean() throws {
+        for (key, entry) in try loadCatalog("Localizable") {
+            for language in ["zh-Hant", "ja", "ko"] {
+                let translated = values(entry, language: language)
+                XCTAssertEqual(translated.count, 1, "缺少 \(language) 翻译：\(key)")
+                for v in translated {
+                    XCTAssertFalse(v.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, "\(language) 翻译为空：\(key)")
+                    XCTAssertEqual(specifiers(in: v).count, specifiers(in: key).count, "\(language) 占位符数量不一致：\(key) → \(v)")
+                }
+            }
+        }
+        for (key, entry) in try loadCatalog("InfoPlist") {
+            for language in ["zh-Hant", "ja", "ko"] {
+                XCTAssertEqual(values(entry, language: language).count, 1, "权限说明缺少 \(language) 翻译：\(key)")
+            }
+        }
+    }
+
+    /// 设置里手动选的界面语言：`String(localized:)` 立刻从那种语言里取，选回「跟随系统」也能取到
+    func testStringLocalizedFollowsTheSelectedAppLanguage() {
+        let state = AppLanguageState.shared
+        let before = state.selection
+        defer { state.selection = before }
+        let expected: [AppLanguage: String] = [.zhHans: "设置", .zhHant: "設定", .en: "Settings", .ja: "設定", .ko: "설정"]
+        for (language, text) in expected {
+            state.selection = language
+            XCTAssertEqual(String(localized: "设置"), text, "\(language.rawValue)")
+            XCTAssertEqual(state.code, language.rawValue)
+        }
+        state.selection = .ja
+        XCTAssertEqual(String(localized: "\(3) 条消息"), "3件のメッセージ", "带数字的也要走选中的语言")
+        state.selection = .system
+        XCTAssertTrue(expected.values.contains(String(localized: "设置")))
+        XCTAssertEqual(Set(AppLanguage.allCases.map(\.title)).count, AppLanguage.allCases.count, "每种语言的名字不能重复")
+    }
+
+    func testAppLanguageSettingIsPersistedAndSurvivesReset() {
+        let before = AppLanguageState.shared.selection
+        defer { AppLanguageState.shared.selection = before }
+        let name = "applang-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defer { defaults.removePersistentDomain(forName: name) }
+        let settings = AppSettings(defaults: defaults)
+        XCTAssertEqual(settings.appLanguage, .system)
+        settings.appLanguage = .ko
+        XCTAssertEqual(AppLanguageState.shared.selection, .ko)
+        XCTAssertEqual(AppSettings(defaults: defaults).appLanguage, .ko)
+        settings.resetToDefaults()
+        XCTAssertEqual(settings.appLanguage, .ko, "恢复默认设置不改界面语言")
+        XCTAssertNil(defaults.persistentDomain(forName: name)?["AppleLanguages"], "临时设置不写系统语言偏好")
+    }
+
     func testPlaceholdersMatchBetweenSourceAndEnglish() throws {
         for (key, entry) in try loadCatalog("Localizable") {
             // 键里的占位符是源语言的；中文显式值（如语言简称）没有占位符，跳过
