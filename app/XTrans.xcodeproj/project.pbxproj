@@ -76,6 +76,7 @@
 		DD320F77A17AE67782BCDB4E /* WideConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED27E0DC99E2A93A4CC47309 /* WideConversationView.swift */; };
 		DD49AC4D665496E55AD34F95 /* VoiceCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1FC7658B05FF11D6DFDA7E /* VoiceCatalogTests.swift */; };
 		DE0F33E42BB6159891D79679 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880A4AC8270BD731B132845 /* Glass.swift */; };
+		E5AFED800DE0A8F604C74B8A /* LaunchSplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBF51E92C2B4230F64232A /* LaunchSplash.swift */; };
 		EABF2BAB6849B4C8BDB41352 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2074AB6D1502DDBC77DFC774 /* SpeechRecognizer.swift */; };
 		ED273DE7EF2B13B04A141C7E /* VoiceCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820187513480EEA1995FA07A /* VoiceCatalog.swift */; };
 		EEBB435D6476E3D40DD45ABE /* AdaptiveLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4212F35CDD64AE57D3046AD9 /* AdaptiveLayout.swift */; };
@@ -111,6 +112,7 @@
 		2074AB6D1502DDBC77DFC774 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		23CDD50FDD3F7D7732C33F3B /* AuroraBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuroraBackground.swift; sourceTree = "<group>"; };
 		2471DA449099F6D6623F0BCE /* FollowReadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowReadingTests.swift; sourceTree = "<group>"; };
+		25CBF51E92C2B4230F64232A /* LaunchSplash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchSplash.swift; sourceTree = "<group>"; };
 		2711BA326406378F1595A8B5 /* Phase8Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phase8Tests.swift; sourceTree = "<group>"; };
 		2FC5E41C5345C6F7AB57EACC /* FaceToFaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceToFaceView.swift; sourceTree = "<group>"; };
 		36C75CB417D3BDB9CFC30595 /* ConversationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSession.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				A0265FBC18589088E7C07AEF /* FocusRefresh.swift */,
 				F55DB1FFD936428B87F7FC6B /* FoldEnvironment.swift */,
 				3DC9F28FC9C73170A9537156 /* FoldProbe.swift */,
+				25CBF51E92C2B4230F64232A /* LaunchSplash.swift */,
 				1C5C949631E7CAC0C0045FA5 /* RootObservers.swift */,
 				7B34F7348641A655E75B4510 /* RootView.swift */,
 				F43E3587CB47BA290B44E548 /* SpeakConsole.swift */,
@@ -509,6 +512,7 @@
 				F5D8B6483B01BF315E43A2EA /* LanguagePacksView.swift in Sources */,
 				7C953F803DFD655C84F0CA43 /* LanguagePickerSheet.swift in Sources */,
 				62842DBEF5F4061561A39021 /* LaunchClock.swift in Sources */,
+				E5AFED800DE0A8F604C74B8A /* LaunchSplash.swift in Sources */,
 				36BE7240D1B738CE20C87B64 /* MicButton.swift in Sources */,
 				49D30260AFFC300236AB00A9 /* MicGlow.swift in Sources */,
 				333F8A87B2270CE4024429FC /* NetworkMonitor.swift in Sources */,

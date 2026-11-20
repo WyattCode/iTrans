@@ -4,14 +4,22 @@ import SwiftUI
 @main
 struct XTransApp: App {
     @State private var model = AppModel()
+    @State private var showingSplash = LaunchSplash.shouldPlay
 
     var body: some Scene {
         WindowGroup {
-            RootView(model: model)
-                .translationHost(model.appleEngine)
-                .environment(\.appleTranslationEngine, model.appleEngine)
-                // 界面语言：`Text("…")` 跟着它取对应语言的文案。放在最外层，弹层、引导页、整屏盖上的页面才都带得到
-                .environment(\.locale, AppLanguageState.shared.locale)
+            ZStack {
+                RootView(model: model)
+                    .translationHost(model.appleEngine)
+                    .environment(\.appleTranslationEngine, model.appleEngine)
+                    // 界面语言：`Text("…")` 跟着它取对应语言的文案。放在最外层，弹层、引导页、整屏盖上的页面才都带得到
+                    .environment(\.locale, AppLanguageState.shared.locale)
+                // 开屏动画：盖在主界面上面播完就淡出。盖着的时候挡触摸，点一下跳过
+                if showingSplash {
+                    LaunchSplash { showingSplash = false }
+                        .zIndex(1)
+                }
+            }
         }
         .modelContainer(model.container)
     }

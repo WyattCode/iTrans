@@ -77,6 +77,7 @@ XTransTests/           状态机 + 存储单元测试（用假的识别 / 朗读
 | `-XTransMock` | 用演示翻译引擎（真机默认用 Apple 翻译） |
 | `-XTransApple` | 在模拟器上强制用 Apple 翻译（默认模拟器用演示引擎） |
 | `-XTransProbe "文本"` | 启动后翻译一句并把结果打印到标准输出 |
+| `-XTransSplash` / `-XTransSplashHold` | 带其他调试参数时也播开屏动画 / 停在开屏最后一帧（平时带调试参数启动不播开屏） |
 
 ## 测试须知
 
