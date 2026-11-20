@@ -387,6 +387,16 @@
         }
       }
     },
+    "使用设备上的翻译，不联网也能用。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses on-device translation. Works without a network."
+          }
+        }
+      }
+    },
     "使用设备上的翻译，只支持已下载的语言。" : {
       "localizations" : {
         "en" : {
@@ -523,6 +533,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Off"
+          }
+        }
+      }
+    },
+    "关于" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
           }
         }
       }
@@ -1157,6 +1177,16 @@
         }
       }
     },
+    "对话只保存在这台设备上。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversations are saved only on this device."
+          }
+        }
+      }
+    },
     "对话标题" : {
       "localizations" : {
         "en" : {
@@ -1173,16 +1203,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chat"
-          }
-        }
-      }
-    },
-    "对话默认只保存在这台设备上。关闭“保存对话历史”后，新的对话不再保存。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conversations are stored only on this device by default. When “Save conversation history” is off, new conversations aren't saved."
           }
         }
       }
@@ -1907,6 +1927,16 @@
         }
       }
     },
+    "本地翻译" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On-device translation"
+          }
+        }
+      }
+    },
     "本机" : {
       "localizations" : {
         "en" : {
@@ -2417,6 +2447,16 @@
         }
       }
     },
+    "短" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Short"
+          }
+        }
+      }
+    },
     "离线可用" : {
       "localizations" : {
         "en" : {
@@ -2653,6 +2693,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Translation engine"
+          }
+        }
+      }
+    },
+    "聆听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listening"
           }
         }
       }
@@ -3215,6 +3265,16 @@
         }
       }
     },
+    "长" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long"
+          }
+        }
+      }
+    },
     "长按你说过的话 → 收藏为短语" : {
       "localizations" : {
         "en" : {
@@ -3401,16 +3461,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Black on yellow"
-          }
-        }
-      }
-    },
-    "默认使用设备上的翻译，不联网也能用。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Translation runs on your device by default and works offline."
           }
         }
       }

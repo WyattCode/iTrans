@@ -158,7 +158,6 @@ struct SettingsView: View {
                 appearanceSection()
                 dataSection
                 versionSection
-                resetSection
             }
             .scrollContentBackground(.hidden)
             .scrollPosition($scrollPosition)
@@ -199,7 +198,6 @@ struct SettingsView: View {
                     appearanceSection()
                     dataSection
                     versionSection
-                    resetSection
                 }
                 .scrollContentBackground(.hidden)
                 .scrollPosition($scrollPosition)
@@ -303,7 +301,7 @@ struct SettingsView: View {
             // 版本号放在侧栏底部（原来混在"数据与隐私"里）
             HStack(spacing: 4) {
                 Text("版本")
-                Text(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")
+                Text(Self.versionText)
             }
             .font(Theme.caption)
             .foregroundStyle(Theme.mut)
@@ -335,9 +333,9 @@ struct SettingsView: View {
                                 @ViewBuilder content: () -> C) -> some View {
         switch (wide, footer) {
         case (true, nil): Section { content() }
-        case (true, let f?): Section { content() } footer: { Text(f) }
+        case (true, let f?): Section { content() } footer: { Text(f).padding(.bottom, 12) }
         case (false, nil): Section { content() } header: { Text(title) }
-        case (false, let f?): Section { content() } header: { Text(title) } footer: { Text(f) }
+        case (false, let f?): Section { content() } header: { Text(title) } footer: { Text(f).padding(.bottom, 12) }
         }
     }
 
@@ -378,17 +376,29 @@ struct SettingsView: View {
         .listRowBackground(CardRowBackground())
     }
 
+    /// 方案 B（设计稿 settings-restructure-options）：云端的和本地的各一张卡片，每张只讲一件事。
+    /// 宽屏里「离线语言包」是左侧单独的一类，「本地翻译」卡片里就只写用的是哪个引擎。
+    @ViewBuilder
     private func translationSection(wide: Bool = false) -> some View {
-        group("翻译", footer: "默认使用设备上的翻译，不联网也能用。", wide: wide) {
-            LabeledContent("翻译引擎", value: EngineDisplay.name(for: engineName))
-            // 离线语言包是本地翻译用的，放在「翻译」这一栏（原来在「数据与隐私」里）。宽屏里它是单独的一类，这里不重复
-            if !wide { packsLink }
+        Section {
+            if wide {
+                LabeledContent("翻译引擎", value: EngineDisplay.name(for: engineName))
+            } else {
+                packsLink
+            }
+        } header: {
+            Text("本地翻译")
+        } footer: {
+            Text("使用设备上的翻译，不联网也能用。")
+                .padding(.bottom, 12)          // 说明文字和下一栏的标题拉开一点（原来贴得太近，像挤在一起）
         }
         .listRowBackground(CardRowBackground())
     }
 
+    /// 「朗读」是 App 说给你听的，「聆听」是 App 听你说的：原来混在一栏「语音」里，「语速」容易被当成你说话的速度
+    @ViewBuilder
     private func speechSection(wide: Bool = false) -> some View {
-        group("语音", wide: wide) {
+        Section {
             Toggle("自动朗读译文", isOn: $settings.autoSpeak).tint(Theme.control)
             NavigationLink {
                 PaneAware { duo in
@@ -400,18 +410,23 @@ struct SettingsView: View {
             } label: {
                 Text("朗读声音")
             }
-
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text("语速")
+                    Text("朗读语速")
                     Spacer()
                     Text(rateLabel).foregroundStyle(Theme.mut)
                 }
                 Slider(value: $settings.speechRate, in: AppSettings.speechRateRange).tint(Theme.control)
                     .accessibilityLabel("朗读语速")
                     .accessibilityValue(Text(rateLabel))
+                sliderEnds("慢", "快")
             }
             .padding(.vertical, wide ? 8 : 0)
+        } header: {
+            Text("朗读")
+        }
+        .listRowBackground(CardRowBackground())
+        Section {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text("停顿多久算一句话")
@@ -421,10 +436,25 @@ struct SettingsView: View {
                 Slider(value: $settings.silenceTimeout, in: AppSettings.silenceRange, step: 0.1).tint(Theme.control)
                     .accessibilityLabel("停顿时间")
                     .accessibilityValue(Text("\(settings.silenceTimeout, specifier: "%.1f") 秒"))
+                sliderEnds("短", "长")
             }
             .padding(.vertical, wide ? 8 : 0)
+        } header: {
+            Text("聆听")
         }
         .listRowBackground(CardRowBackground())
+    }
+
+    /// 滑块两端的小字：往哪边拖是什么，不用拖一下才知道
+    private func sliderEnds(_ low: LocalizedStringKey, _ high: LocalizedStringKey) -> some View {
+        HStack {
+            Text(low)
+            Spacer()
+            Text(high)
+        }
+        .font(Theme.caption)
+        .foregroundStyle(Theme.mut)
+        .accessibilityHidden(true)
     }
 
     private var rateLabel: LocalizedStringKey {
@@ -464,7 +494,8 @@ struct SettingsView: View {
         } header: {
             Text("数据与隐私")
         } footer: {
-            Text("对话默认只保存在这台设备上。关闭“保存对话历史”后，新的对话不再保存。")
+            Text("对话只保存在这台设备上。")
+                .padding(.bottom, 12)          // 说明文字和下一栏的标题拉开一点（原来贴得太近，像挤在一起）
         }
         .listRowBackground(CardRowBackground())
     }
@@ -499,22 +530,32 @@ struct SettingsView: View {
             Toggle("保存对话历史", isOn: $settings.saveHistory).tint(Theme.control)
             Button("清除历史对话", role: .destructive) { confirmingClear = true }
         } footer: {
-            Text("对话默认只保存在这台设备上。关闭“保存对话历史”后，新的对话不再保存。")
+            Text("对话只保存在这台设备上。")
         }
         .listRowBackground(CardRowBackground())
     }
 
+    private static var versionText: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
+        return build.isEmpty ? version : "\(version) (\(build))"
+    }
+
+    /// 「恢复默认设置」和「版本」合成一张卡片（原来各占一张单行卡片）。恢复默认只是把选项改回去、不丢数据，不用警示色
     private var versionSection: some View {
         Section {
-            LabeledContent("版本", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")
+            Button { confirmingReset = true } label: { Text("恢复默认设置").foregroundStyle(Theme.fg) }
+            LabeledContent("版本", value: Self.versionText)
+        } header: {
+            Text("关于")
         }
         .listRowBackground(CardRowBackground())
     }
 
-    /// 危险操作单独成组、用警示色，不和"版本"这种只读信息混在一起。
+    /// 宽屏的「数据与隐私」页里用：只有恢复默认这一行（版本号在左栏底部）
     private var resetSection: some View {
         Section {
-            Button("恢复默认设置", role: .destructive) { confirmingReset = true }
+            Button { confirmingReset = true } label: { Text("恢复默认设置").foregroundStyle(Theme.fg) }
         }
         .listRowBackground(CardRowBackground())
     }
