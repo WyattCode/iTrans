@@ -369,7 +369,10 @@ struct SettingsView: View {
             }
             }
             Button { session.swapLanguages() } label: {
-                Label("对调两边的语言", systemImage: "arrow.left.arrow.right")
+                // 图标用小一号：默认大小在这一行里比文字重，显得突兀
+                Label { Text("对调两边的语言") } icon: {
+                    Image(systemName: "arrow.left.arrow.right").imageScale(.small)
+                }
             }
         }
         .listRowBackground(CardRowBackground())
@@ -378,6 +381,8 @@ struct SettingsView: View {
     private func translationSection(wide: Bool = false) -> some View {
         group("翻译", footer: "默认使用设备上的翻译，不联网也能用。", wide: wide) {
             LabeledContent("翻译引擎", value: EngineDisplay.name(for: engineName))
+            // 离线语言包是本地翻译用的，放在「翻译」这一栏（原来在「数据与隐私」里）。宽屏里它是单独的一类，这里不重复
+            if !wide { packsLink }
         }
         .listRowBackground(CardRowBackground())
     }
@@ -455,20 +460,6 @@ struct SettingsView: View {
         Section {
             if session.historyIsVolatile { volatileNotice }
             Toggle("保存对话历史", isOn: $settings.saveHistory).tint(Theme.control)
-            NavigationLink {
-                PaneAware { duo in
-                    // Duo 外屏（竖排栏）也自己画页头：系统栏在页面出现后才排好，会二次排版
-                    if duo || railVertical {
-                        PaneDetailPage(title: "离线语言包") { LanguagePacksView(packs: packs, showsTitle: false) }
-                    } else {
-                        LanguagePacksView(packs: packs)
-                    }
-                }
-                    .onAppear { subpage(1) }
-                    .onDisappear { subpage(-1) }
-            } label: {
-                LabeledContent("离线语言包", value: packs.installedCount > 0 ? String(localized: "\(packs.installedCount) 个已下载") : "")
-            }
             Button("清除历史对话", role: .destructive) { confirmingClear = true }
         } header: {
             Text("数据与隐私")
@@ -482,6 +473,23 @@ struct SettingsView: View {
         Label("这台设备上没能打开历史存储，这次的对话退出后会丢失。", systemImage: "exclamationmark.triangle")
             .font(Theme.caption)
             .foregroundStyle(Theme.warn)
+    }
+
+    private var packsLink: some View {
+        NavigationLink {
+                PaneAware { duo in
+                    // Duo 外屏（竖排栏）也自己画页头：系统栏在页面出现后才排好，会二次排版
+                    if duo || railVertical {
+                        PaneDetailPage(title: "离线语言包") { LanguagePacksView(packs: packs, showsTitle: false) }
+                    } else {
+                        LanguagePacksView(packs: packs)
+                    }
+                }
+                    .onAppear { subpage(1) }
+                    .onDisappear { subpage(-1) }
+        } label: {
+                LabeledContent("离线语言包", value: packs.installedCount > 0 ? String(localized: "\(packs.installedCount) 个已下载") : "")
+        }
     }
 
     /// 宽屏里"离线语言包"是单独的一类，这里不重复。
