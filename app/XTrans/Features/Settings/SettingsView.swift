@@ -39,6 +39,8 @@ struct SettingsView: View {
     @State private var confirmingClear = false
     @State private var confirmingReset = false
     @State private var showingLanguages = false
+    /// 界面语言刚选完、还没真正换过去的那一小会儿
+    @State private var pendingLanguage: AppLanguage?
     @Environment(\.colorScheme) private var colorScheme
 
     /// Duo 外屏（系统竖排栏）里原生推入的页面：用系统栏的返回键，不自己画页头
@@ -477,11 +479,19 @@ struct SettingsView: View {
             // 深色 / 浅色切换：整页溶解，不是硬切
             AppearanceSegmented(selection: Binding(get: { settings.appearance },
                                                     set: { new in crossfadePage(reduceMotion: reduceMotion, extraSettle: 0.08, punchesChrome: false) { settings.appearance = new } }))
-            // 界面语言：选完整页溶解着换过去，不用重启
-            Picker("界面语言", selection: Binding(get: { settings.appLanguage },
+            // 界面语言：选完整页溶解着换过去，不用重启。
+            // 先让系统菜单自己收完（约 0.25 秒）再换：原来一选就换，菜单收起、整页重排、溶解三件事叠在一起，看着一顿一顿的。
+            // 这一行先显示新选的那种（`pendingLanguage`），菜单收回来时落在正确的字上。
+            Picker("界面语言", selection: Binding(get: { pendingLanguage ?? settings.appLanguage },
                                                  set: { new in
-                guard new != settings.appLanguage else { return }
-                crossfadePage(reduceMotion: reduceMotion, extraSettle: 0.08, punchesChrome: false) { settings.appLanguage = new }
+                guard new != settings.appLanguage, pendingLanguage == nil else { return }
+                pendingLanguage = new
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(260))
+                    // 换语言是全 App 的文字一起重排，比换外观重：快照多盖一会儿，等新页排好再淡出
+                    crossfadePage(reduceMotion: reduceMotion, extraSettle: 0.12, punchesChrome: false) { settings.appLanguage = new }
+                    pendingLanguage = nil
+                }
             })) {
                 ForEach(AppLanguage.allCases) { Text(verbatim: $0.title).tag($0) }
             }
