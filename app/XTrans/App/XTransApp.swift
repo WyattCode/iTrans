@@ -69,7 +69,7 @@ final class AppModel {
             guard let i = args.firstIndex(of: flag), i + 1 < args.count else { return nil }
             return args[i + 1]
         }
-        let debugFlags = ["-XTransNoHistory", "-XTransDemo", "-XTransDemoOffset", "-XTransDemoRepeat", "-XTransDemoHistory", "-XTransDemoPhrases", "-XTransScreen", "-XTransOnboarding", "-XTransAutoMotion", "-XTransAutoTyping", "-XTransAutoSwap", "-XTransAutoTypingStart"]
+        let debugFlags = ["-XTransNoHistory", "-XTransDemo", "-XTransDemoOffset", "-XTransDemoRepeat", "-XTransDemoHistory", "-XTransDemoPhrases", "-XTransScreen", "-XTransOnboarding", "-XTransAutoMotion", "-XTransAutoTyping", "-XTransAutoSwap", "-XTransSettingsCategory", "-XTransAutoTypingStart"]
         let isDebugLaunch = debugFlags.contains { args.contains($0) }
 
         // 设置

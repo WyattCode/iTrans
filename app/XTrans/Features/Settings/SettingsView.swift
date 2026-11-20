@@ -77,7 +77,8 @@ struct SettingsView: View {
         }
     }
 
-    @State private var category: Category = .language
+    /// 走查用：`-XTransSettingsCategory translation` 直接停在宽屏设置的某一类（只在 Debug / PERF_HOOKS 生效）
+    @State private var category: Category = Category(rawValue: DebugFlags.settingsCategory ?? "") ?? .language
 
     var body: some View {
         let _ = BodyCount.hit("SettingsView")

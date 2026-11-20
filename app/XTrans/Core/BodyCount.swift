@@ -68,3 +68,16 @@ private final class HitchTarget: NSObject {
     }
 }
 #endif
+
+/// 走查用的启动开关（只在 Debug / PERF_HOOKS 里有；发布版恒为空）。
+enum DebugFlags {
+    static var settingsCategory: String? {
+        #if DEBUG || PERF_HOOKS
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-XTransSettingsCategory"), i + 1 < args.count else { return nil }
+        return args[i + 1]
+        #else
+        return nil
+        #endif
+    }
+}
