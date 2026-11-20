@@ -88,8 +88,8 @@ enum Strings {
     static func noSpeechTap(_ lang: LanguageOption) -> String {
         pick(lang, ["zh-Hans": "没听清 · 轻点重说", "en": "Didn't catch that · tap to retry", "ja": "聞き取れませんでした · タップでやり直し",
                     "ko": "잘 못 들었어요 · 눌러서 다시", "es": "No se entendió · toca para repetir", "fr": "Pas compris · touchez pour réessayer",
-                    "de": "Nicht verstanden · tippen zum Wiederholen", "it": "Non ho capito · tocca per riprovare",
-                    "pt": "Não entendi · toque para repetir", "ru": "Не расслышал · нажмите, чтобы повторить"])
+                    "de": "Nicht verstanden · erneut tippen", "it": "Non ho capito · tocca per riprovare",
+                    "pt": "Não entendi · toque para repetir", "ru": "Не расслышал · нажмите ещё раз"])
     }
     static func retry(_ lang: LanguageOption) -> String {
         pick(lang, ["zh-Hans": "再说一次", "en": "Try again", "ja": "もう一度", "ko": "다시 말하기", "es": "Repetir", "fr": "Réessayer",

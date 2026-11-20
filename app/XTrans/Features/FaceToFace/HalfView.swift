@@ -164,6 +164,7 @@ struct HalfView: View {
                     .font(.system(.footnote).weight(.semibold))
                     .foregroundStyle(Theme.warn)
                     .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.7)          // 超大字号 + 较长的语言（俄语、德语）：先缩一点，别截成「…」
                     .padding(.horizontal, 12)
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
